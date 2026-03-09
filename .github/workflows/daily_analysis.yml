@@ -65,7 +65,7 @@ jobs:
           # OpenAI 兼容配置（用于 tbnx.plus7.plus 转发）
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-          LITELLM_MODEL: openai/deepseek-chat
+          LITELLM_MODEL: openai/deepseek-reasoner
 
 
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
