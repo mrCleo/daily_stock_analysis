@@ -1,9 +1,11 @@
 name: 每日股票分析
 
 on:
+  # 定时触发 - 每天北京时间 18:00 (UTC 10:00)
   schedule:
-    - cron: '0 10 * * 1-5'
+    - cron: '0 10 * * 1-5'     # 周一到周五，UTC 10:00 = 北京时间 18:00
   
+  # 手动触发
   workflow_dispatch:
     inputs:
       mode:
@@ -12,15 +14,16 @@ on:
         default: 'full'
         type: choice
         options:
-          - full
-          - market-only
-          - stocks-only
+          - full          # 完整分析（股票+大盘）
+          - market-only   # 仅大盘复盘
+          - stocks-only   # 仅股票分析
       force_run:
         description: '强制运行（跳过交易日检查）'
         required: false
         default: false
         type: boolean
 
+# 并发控制：同一时间只运行一个分析任务
 concurrency:
   group: stock-analysis
   cancel-in-progress: false
@@ -28,11 +31,12 @@ concurrency:
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    # 添加超时限制，防止任务卡死
     timeout-minutes: 30
     
     steps:
       - name: 随机延迟（避免固定时间访问）
-        run: sleep $((RANDOM % 60))
+        run: sleep $((RANDOM % 60))  # 随机延迟0-60秒启动
       
       - name: 检出代码
         uses: actions/checkout@v4
@@ -55,21 +59,13 @@ jobs:
       - name: 执行股票分析
         env:
           # ==========================================
-          # AI 配置
+          # AI 配置 - 使用转发API (tbnx.plus7.plus)
           # ==========================================
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || secrets.GEMINI_MODEL || 'gemini-3-flash-preview' }}
-          GEMINI_MODEL_FALLBACK: ${{ vars.GEMINI_MODEL_FALLBACK || secrets.GEMINI_MODEL_FALLBACK || 'gemini-2.5-flash' }}
-          GEMINI_REQUEST_DELAY: '3.0'
           
-          AIHUBMIX_KEY: ${{ secrets.AIHUBMIX_KEY }}
-
-          # OpenAI 兼容 API（DeepSeek 中转）
-  # 使用 OpenAI 兼容配置
+          # OpenAI 兼容配置（用于 tbnx.plus7.plus 转发）
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_BASE_URL: https://tbnx.plus7.plus/v1
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
           LITELLM_MODEL: openai/deepseek-chat
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || secrets.OPENAI_MODEL }}
 
           # 不使用 DeepSeek 官方直连
           DEEPSEEK_API_KEY: ''
