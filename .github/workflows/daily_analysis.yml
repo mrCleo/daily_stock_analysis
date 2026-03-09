@@ -67,8 +67,6 @@ jobs:
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
           LITELLM_MODEL: openai/deepseek-chat
 
-          # 不使用 DeepSeek 官方直连
-          DEEPSEEK_API_KEY: ''
 
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || secrets.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022' }}
