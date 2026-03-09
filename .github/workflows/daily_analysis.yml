@@ -65,10 +65,11 @@ jobs:
           AIHUBMIX_KEY: ${{ secrets.AIHUBMIX_KEY }}
 
           # OpenAI 兼容 API（DeepSeek 中转）
+  # 使用 OpenAI 兼容配置
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_BASE_URL: ${{ vars.OPENAI_BASE_URL || secrets.OPENAI_BASE_URL }}
+          OPENAI_BASE_URL: https://tbnx.plus7.plus/v1
+          LITELLM_MODEL: openai/deepseek-chat
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || secrets.OPENAI_MODEL }}
-          LITELLM_MODEL: ${{ secrets.LITELLM_MODEL }}
 
           # 不使用 DeepSeek 官方直连
           DEEPSEEK_API_KEY: ''
